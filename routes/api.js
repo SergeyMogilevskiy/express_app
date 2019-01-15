@@ -1,33 +1,63 @@
-var createError = require("http-errors");
 var express = require("express");
+const { books } = require("../lib/db");
+
 var router = express.Router();
 
-const { getConnection } = require("../lib/db");
+const manager = require("../manager/books");
 
-const db = getConnection();
-
-router.get("/products", function(req, res, next) {
-  db.any("SELECT * FROM books")
+router.get("/products", (req, res, next) => {
+  console.log('=========123========')
+  const { _page: page, _limit: limit } = req.query;
+  manager
+    .getBooks( Number(page), Number(limit))
     .then(function(data) {
-      const { _page: page = 1, _limit: limit = 4 } = req.query;
-      const response = data.slice((page - 1) * limit, limit * page);
-      res.setHeader("X-Total-Count", data.length);
-      res.send(response);
-    })
-    .catch(function(error) {
-      console.log("ERROR:", error);
-    });
-});
+      console.log(data);
 
-router.get("/product/:id", function(req, res, next) {
-  db.one(`SELECT * FROM books WHERE "id" = ${req.param("id")}`)
-    .then(function(data) {
-      data;
+      res.setHeader("X-Total-Count", 14);
       res.send(data);
     })
     .catch(function(error) {
-      console.log("ERROR:", error);
+      console.log(error);
+      next(error);
     });
+});
+
+router.get("/product/:id", (req, res, next) => {
+  manager
+    .getBookById(req.param("id"))
+    .then(function(data) {
+      res.send(data);
+    })
+    .catch(function(error) {
+      next(error);
+    });
+});
+
+router.post("/post", (req, res, next) => {
+  const data = { ...req.body };
+  manager
+    .postBook(data)
+    .then(function() {
+      res.send("completed successfully");
+    })
+    .catch(function(error) {
+      next(error);
+    });
+});
+
+router.post("/update", (req, res, next) => {
+  const body = { ...req.body };
+  const data = [];
+  console.log(body);
+  
+  // manager
+  //   .updateBook(data)
+  //   .then(function() {
+  //     res.send("completed successfully");
+  //   })
+  //   .catch(function(error) {
+  //     next(error);
+  //   });
 });
 
 module.exports = router;
