@@ -1,8 +1,4 @@
-const models = require("../models/models");
-
-// const getBooks = (page, limit) => {
-//   return Promise.all([model.getBooks(page, limit), model.getTotalBooks()]);
-// };
+const models = require("../models/books");
 
 const getBooks = (page, limit) => {
   return models.getBooks(page, limit);
@@ -16,8 +12,12 @@ const postBook = (body) => {
   return models.postBook(body);
 };
 
-const updateBook = (body, id) => {
-  // return models.updateBook(body, id);
+const deleteBook = id => {
+  return models.deleteBook(id)
 }
 
-module.exports = { getBooks, getBookById, postBook, updateBook };
+const updateBook = body => {
+  return models.updateBook(body);
+}
+
+module.exports = { getBooks, getBookById, postBook, updateBook, deleteBook };
