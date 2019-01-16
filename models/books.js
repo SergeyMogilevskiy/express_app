@@ -1,7 +1,7 @@
 // const { getConnection } = require("../lib/db");
 
 // const db = getConnection();
-const Books = require("../lib/db");
+const { Books } = require("../lib/db");
 
 function getBooks(page, limit) {
   return Books.query("orderBy", "id", "ASC").fetchPage({

@@ -39,7 +39,7 @@ router.post("/post", (req, res, next) => {
     });
 });
 
-router.use("/delete", (req, res, next) => {
+router.delete("/delete", (req, res, next) => {
   manager
     .deleteBook(req.body.id)
     .then(function() {
@@ -50,8 +50,7 @@ router.use("/delete", (req, res, next) => {
     });
 });
 
-router.use("/update", (req, res, next) => {
-  console.log('====asd===')
+router.put("/update", (req, res, next) => {
   manager
     .updateBook({ ...req.body })
     .then(function() {
